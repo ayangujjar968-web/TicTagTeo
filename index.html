@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tic Tac Toe Game</title>
+    <link rel="icon" href="logo.svg" type="image/svg+xml">
+    <link rel="shortcut icon" href="logo.svg">
+  <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+
+        .header {
+            background: white;
+            padding: 20px 0;
+            margin-bottom: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-radius: 12px;
+        }
+
+        .brand {
+            text-align: center;
+        }
+
+        .brand h1 {
+            color: #1a1a1a;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 5px;
+        }
+
+        .brand-logo {
+            width: 56px;
+            height: 56px;
+            display: block;
+            margin: 0 auto 12px;
+        }
+
+        .brand-tagline {
+            color: #6b7280;
+            font-size: 0.95rem;
+            font-weight: 400;
+        }
+
+        .main-content {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            flex: 1;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+            max-width: 520px;
+            width: 100%;
+        }
+
+        h2 {
+            color: #1a1a1a;
+            margin-bottom: 30px;
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+
+        .game-info {
+            margin-bottom: 30px;
+        }
+
+        .current-player {
+            font-size: 1.125rem;
+            color: #374151;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .player-indicator {
+            font-weight: 700;
+            color: #3b82f6;
+            padding: 2px 8px;
+            border-radius: 4px;
+            background: #eff6ff;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin: 0 auto 30px;
+            max-width: 360px;
+            background: #f9fafb;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .cell {
+            aspect-ratio: 1;
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 2.5rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: #1a1a1a;
+        }
+
+        .cell:hover:not(:disabled) {
+            background: #f9fafb;
+            border-color: #3b82f6;
+            transform: scale(1.02);
+        }
+
+        .cell.x {
+            color: #2563eb;
+        }
+
+        .cell.o {
+            color: #dc2626;
+        }
+
+        .cell:disabled {
+            cursor: not-allowed;
+            opacity: 0.9;
+        }
+
+        .game-status {
+            font-size: 1.25rem;
+            margin-bottom: 20px;
+            min-height: 2rem;
+            font-weight: 600;
+            color: #374151;
+        }
+
+        .winner {
+            color: #059669;
+        }
+
+        .draw {
+            color: #d97706;
+        }
+
+        .reset-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .reset-btn:hover {
+            background: #2563eb;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .reset-btn:active {
+            transform: scale(0.98);
+        }
+
+        .score-board {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 25px;
+            background: #f9fafb;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .score {
+            text-align: center;
+            flex: 1;
+        }
+
+        .score-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-bottom: 8px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .score-value {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .score.x .score-value {
+            color: #2563eb;
+        }
+
+        .score.o .score-value {
+            color: #dc2626;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            margin-top: 40px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer-text {
+            color: #6b7280;
+            font-size: 0.875rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-link {
+            color: #3b82f6;
+            text-decoration: none;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .footer-link:hover {
+            color: #2563eb;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .game-container {
+                padding: 30px 20px;
+            }
+            
+            .brand h1 {
+                font-size: 1.5rem;
+            }
+
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .cell {
+                font-size: 2rem;
+            }
+
+            .score-value {
+                font-size: 1.75rem;
+            }
+        }
+    </style>
+    <style>@view-transition { navigation: auto; }</style>
+        <!-- texture removed -->
+        <!-- Removed references to missing local SDKs (_sdk) to avoid broken links when served statically -->
+        <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <header class="header">
+   <div class="brand">
+    <img src="logo.svg" alt="Tic Tac Toe logo" class="brand-logo">
+    <h1>Classic Tic Tac Toe</h1>
+    <p class="brand-tagline">Strategic Board Game - Play Online Free</p>
+   </div>
+  </header>
+  <main class="main-content">
+   <div class="game-container">
+    <h2>Game Board</h2>
+    <div class="score-board">
+     <div class="score x">
+      <div class="score-label">
+       Player X
+      </div>
+      <div class="score-value" id="scoreX">
+       0
+      </div>
+     </div>
+     <div class="score o">
+      <div class="score-label">
+       Player O
+      </div>
+      <div class="score-value" id="scoreO">
+       0
+      </div>
+     </div>
+    </div>
+    <div class="game-info">
+     <div class="current-player">
+      Current Player: <span class="player-indicator" id="currentPlayer">X</span>
+     </div>
+    </div>
+    <div class="game-board" id="gameBoard"><button class="cell" data-index="0"></button> <button class="cell" data-index="1"></button> <button class="cell" data-index="2"></button> <button class="cell" data-index="3"></button> <button class="cell" data-index="4"></button> <button class="cell" data-index="5"></button> <button class="cell" data-index="6"></button> <button class="cell" data-index="7"></button> <button class="cell" data-index="8"></button>
+    </div>
+    <div class="game-status" id="gameStatus"></div><button class="reset-btn" id="resetBtn">New Game</button>
+   </div>
+  </main>
+    <footer class="footer">
+     <div class="footer-content">
+        <p class="footer-text">Tic Tac Toe is a classic strategy game for two players. Take turns marking spaces in a 3×3 grid. The first player to get three of their marks in a row (horizontally, vertically, or diagonally) wins the game.</p>
+        <div class="footer-links">
+         <a href="how-to-play.html" class="footer-link">How to Play</a>
+         <a href="rules.html" class="footer-link">Game Rules</a>
+         <a href="about.html" class="footer-link">About</a>
+         <a href="contact.html" class="footer-link">Contact</a>
+         <a href="privacy.html" class="footer-link">Privacy Policy</a>
+        </div>
+     </div>
+    </footer>
+  <script>
+        class TicTacToe {
+            constructor() {
+                this.board = Array(9).fill('');
+                this.currentPlayer = 'X';
+                this.gameActive = true;
+                this.scores = { X: 0, O: 0 };
+                
+                this.cells = document.querySelectorAll('.cell');
+                this.currentPlayerElement = document.getElementById('currentPlayer');
+                this.gameStatusElement = document.getElementById('gameStatus');
+                this.resetBtn = document.getElementById('resetBtn');
+                this.scoreXElement = document.getElementById('scoreX');
+                this.scoreOElement = document.getElementById('scoreO');
+                
+                this.winningConditions = [
+                    [0, 1, 2], [3, 4, 5], [6, 7, 8], // Rows
+                    [0, 3, 6], [1, 4, 7], [2, 5, 8], // Columns
+                    [0, 4, 8], [2, 4, 6] // Diagonals
+                ];
+                
+                this.initializeGame();
+            }
+            
+            initializeGame() {
+                this.cells.forEach((cell, index) => {
+                    cell.addEventListener('click', () => this.handleCellClick(index));
+                });
+                
+                this.resetBtn.addEventListener('click', () => this.resetGame());
+                this.updateDisplay();
+            }
+            
+            handleCellClick(index) {
+                if (this.board[index] !== '' || !this.gameActive) {
+                    return;
+                }
+                
+                this.board[index] = this.currentPlayer;
+                this.updateCell(index);
+                
+                if (this.checkWinner()) {
+                    this.gameActive = false;
+                    this.scores[this.currentPlayer]++;
+                    this.updateScores();
+                    this.gameStatusElement.textContent = `Player ${this.currentPlayer} Wins!`;
+                    this.gameStatusElement.className = 'game-status winner';
+                    this.disableAllCells();
+                } else if (this.checkDraw()) {
+                    this.gameActive = false;
+                    this.gameStatusElement.textContent = `Game Draw - Try Again!`;
+                    this.gameStatusElement.className = 'game-status draw';
+                } else {
+                    this.currentPlayer = this.currentPlayer === 'X' ? 'O' : 'X';
+                    this.updateDisplay();
+                }
+            }
+            
+            updateCell(index) {
+                const cell = this.cells[index];
+                cell.textContent = this.currentPlayer;
+                cell.classList.add(this.currentPlayer.toLowerCase());
+                cell.disabled = true;
+            }
+            
+            checkWinner() {
+                return this.winningConditions.some(condition => {
+                    const [a, b, c] = condition;
+                    return this.board[a] && 
+                           this.board[a] === this.board[b] && 
+                           this.board[a] === this.board[c];
+                });
+            }
+            
+            checkDraw() {
+                return this.board.every(cell => cell !== '');
+            }
+            
+            disableAllCells() {
+                this.cells.forEach(cell => {
+                    cell.disabled = true;
+                });
+            }
+            
+            updateDisplay() {
+                this.currentPlayerElement.textContent = this.currentPlayer;
+                this.currentPlayerElement.style.color = this.currentPlayer === 'X' ? '#2563eb' : '#dc2626';
+                this.currentPlayerElement.style.background = this.currentPlayer === 'X' ? '#eff6ff' : '#fef2f2';
+            }
+            
+            updateScores() {
+                this.scoreXElement.textContent = this.scores.X;
+                this.scoreOElement.textContent = this.scores.O;
+            }
+            
+            resetGame() {
+                this.board = Array(9).fill('');
+                this.currentPlayer = 'X';
+                this.gameActive = true;
+                
+                this.cells.forEach(cell => {
+                    cell.textContent = '';
+                    cell.disabled = false;
+                    cell.classList.remove('x', 'o');
+                });
+                
+                this.gameStatusElement.textContent = '';
+                this.gameStatusElement.className = 'game-status';
+                this.updateDisplay();
+            }
+        }
+        
+        // Initialize the game when the page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new TicTacToe();
+        });
+    </script>
+</body>
+</html>
